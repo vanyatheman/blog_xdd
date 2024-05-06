@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load cache %}
+{% cache 20 sidebar %}
+{% block title %}
+  {{ title }}
+{% endblock title %}
+
+{% block content %}
+{% include 'posts/includes/switcher.html' %}
+{% if not page_obj.has_previous %}
+  <h1>
+    Главная страница
+  </h1>
+{% else %}
+  <h1>
+    Страница номер {{ page_obj.number }}
+  </h1>
+{% endif %}
+<hr>
+{% for post in page_obj %}
+  {% include 'posts/includes/post_generator.html' %}
+  {% if post.group %}
+    <a href="{% url 'posts:group_posts' post.group.slug %}">Группа {{ post.group.title }}</a>
+  {% endif %}
+  {% if not forloop.last %}<hr>{% endif %}
+{% endfor %}
+{% include 'posts/includes/paginator.html' %}
+{% endblock %}
+{% endcache %}
